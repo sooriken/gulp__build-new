@@ -15,9 +15,10 @@ const minCss       = require('gulp-minify-css');
 const rename       = require('gulp-rename');
 const sourceMaps   = require('gulp-sourcemaps');
 const plumber      = require('gulp-plumber');
-const notify      = require('gulp-notify');
+const notify       = require('gulp-notify');
 
 const webpack = require('webpack-stream');
+const babel = require('gulp-babel');
 // открыть при финальной сборке (пакет группировки медиа-запросов, который ломает сурс-мапс):
 // const groupMedia   = require('gulp-group-css-media-queries')
 
@@ -111,6 +112,7 @@ gulp.task('sass', function() {
 gulp.task('js', function() {
     return src(sources.js)
         .pipe(plumber(plumberNotify('Js')))
+        .pipe(babel)
         .pipe(webpack(require(sources.webpackConfig)))
         .pipe(dest(sources.destJs));
 })
