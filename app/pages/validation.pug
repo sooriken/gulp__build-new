@@ -1,6 +1,6 @@
-include src/blocks/header
-include src/blocks/content
-include src/blocks/footer
+include ../src/blocks/header
+include ../src/blocks/content
+include ../src/blocks/footer
 
 doctype html
 html(lang="ru")
@@ -10,19 +10,19 @@ html(lang="ru")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title Gulp
     // default css
-    link(rel="stylesheet" href="css-min/default.min.css")
+    link(rel="stylesheet" href="../css-min/default.min.css")
     // normalize css
-    link(rel="stylesheet" href="css-min/normalize.min.css")
+    link(rel="stylesheet" href="../css-min/normalize.min.css")
     // style css
-    link(rel="stylesheet" href="css-min/style.min.css")
+    link(rel="stylesheet" href="../css-min/style.min.css")
     // fonts
     link(rel="preconnect" href="https://fonts.googleapis.com")
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
     link(href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Raleway:wght@400;800&display=swap" rel="stylesheet") 
   
 body  
-    .page 
-        +header 
-        +content   
+    .page
+        +header       
+        .validation__inner Страница Валидации
         +footer
-script(src="./src/js-bundle/main.bundle.js")
+script (src="js/main.min.js")
