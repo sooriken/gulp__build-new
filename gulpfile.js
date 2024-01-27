@@ -35,6 +35,7 @@ var sources = {
     // pug
     pug          : './app/index.pug',
     anyPug       : './app/pages/*.pug',
+    allPug       : './app/**/*.pug',
     // html
     html         : './app/**/*.html',
     // image
@@ -84,7 +85,7 @@ gulp.task('anyPug', function() {
     return src(sources.anyPug)
         .pipe(plumber(plumberNotify('Pug')))
         .pipe(pug({pretty: true}))
-        .pipe(dest('./app/'))
+        .pipe(dest('./app/pages'))
 });
 
 // функция sass (конвертирует все sass файлы)
@@ -112,7 +113,7 @@ gulp.task('sass', function() {
 gulp.task('js', function() {
     return src(sources.js)
         .pipe(plumber(plumberNotify('Js')))
-        .pipe(babel)
+//        .pipe(babel)
         .pipe(webpack(require(sources.webpackConfig)))
         .pipe(dest(sources.destJs));
 })
@@ -126,7 +127,7 @@ gulp.task('server', function() {
 // функция watch (слежение за sass и pug файлами)
 gulp.task('watch', function() {
 	gulp.watch(sources.anySass, gulp.parallel('sass'));
-	gulp.watch(sources.pug, gulp.parallel('pug'));
+	gulp.watch(sources.allPug, gulp.parallel('pug'));
 	gulp.watch(sources.anyJs, gulp.parallel('js'));
     // при разработке многостраничного сайта (подключает pug файлы из директории pages):
 	gulp.watch(sources.anyPug, gulp.parallel('anyPug'));
