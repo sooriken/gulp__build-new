@@ -33,9 +33,8 @@ var sources = {
     // sass
     anySass      : './app/src/sass/**/*.sass',
     // pug
-    pug          : './app/index.pug',
-    anyPug       : './app/pages/*.pug',
-    allPug       : './app/**/*.pug',
+    pug          : './app/**/*.pug',
+    blocksPug    : '!./app/blocks/*.pug',
     // html
     html         : './app/**/*.html',
     // image
@@ -49,7 +48,8 @@ var sources = {
     destFiles    : './dist/files',
     // js
     js           : './app/src/js/*.js',
-    destJs       : './app/src/js-bundle',
+    destJs       : './app/js-bundle',
+    bundleJs     : './app/js-bundle/*.js',
     anyJs        : './app/src/js/**/*.js',
     // webpack config
     webpackConfig: './webpack.config.js',
@@ -74,18 +74,10 @@ const plumberNotify = (title) => {
 
 // функция pug (преобразует index.pug)
 gulp.task('pug', function() {
-    return src(sources.pug)
+    return src([sources.pug, sources.blocksPug ])
         .pipe(plumber(plumberNotify('Pug')))
         .pipe(pug({pretty: true}))
         .pipe(dest('./app/'))
-});
-
-// функция anyPug (преобразует все pug файлы)
-gulp.task('anyPug', function() {
-    return src(sources.anyPug)
-        .pipe(plumber(plumberNotify('Pug')))
-        .pipe(pug({pretty: true}))
-        .pipe(dest('./app/pages'))
 });
 
 // функция sass (конвертирует все sass файлы)
@@ -127,10 +119,8 @@ gulp.task('server', function() {
 // функция watch (слежение за sass и pug файлами)
 gulp.task('watch', function() {
 	gulp.watch(sources.anySass, gulp.parallel('sass'));
-	gulp.watch(sources.allPug, gulp.parallel('pug'));
+	gulp.watch(sources.pug, gulp.parallel('pug'));
 	gulp.watch(sources.anyJs, gulp.parallel('js'));
-    // при разработке многостраничного сайта (подключает pug файлы из директории pages):
-	gulp.watch(sources.anyPug, gulp.parallel('anyPug'));
 });
 
 // функция clean (очищает папку "dist")
@@ -151,18 +141,9 @@ gulp.task('default', gulp.series(
 //функция сжатия изображений
 gulp.task('images', function() {
     return src(sources.image)
-    .pipe(imagemin([
-        imagemin.gifsicle({interlaced: true}),
-        imagemin.mozjpeg({quality: 75, progressive: true}),
-        imagemin.optipng({optimizationLevel: 5}),
-        imagemin.svgo({
-            plugins: [
-                {removeViewBox: true},
-                {cleanupIDs: false}
-                ]
-            })
-        ]
-    ))
+    .pipe(imagemin({
+        verbose: true
+    }))
     .pipe(dest(sources.destImage))
 });
 
@@ -178,7 +159,7 @@ gulp.task('files', function() {
         .pipe(dest(sources.destFiles));
 });
 
-// функция копирования index.html в готовую папку dist
+// функция копирования .html в готовую папку dist
 gulp.task('html', function() {
     return src(sources.html)
         .pipe(dest('./dist'));
@@ -190,12 +171,19 @@ gulp.task('css', function() {
         .pipe(dest('./dist/css-min'));
 });
 
+// функция копирования css файлов в готовую папку dist
+gulp.task('jsBundle', function() {
+    return src(sources.bundleJs)
+        .pipe(dest('./dist/js-bundle'));
+});
+
 
 // функция build
 gulp.task('build', gulp.series(
     'clean',
     'html',
     'css',
+    'jsBundle',
     'files',
     'fonts',
     'images'
