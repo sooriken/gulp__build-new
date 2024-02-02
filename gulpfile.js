@@ -5,17 +5,18 @@ const { src, dest, watch, parallel, series } = require('gulp');
 const gulp         = require('gulp');
 const pug          = require('gulp-pug');
 const sass         = require('gulp-sass')(require('sass'));
+const minCss       = require('gulp-minify-css');
 const imagemin     = require('gulp-imagemin');
 const server       = require('gulp-server-livereload');
 const clean        = require('gulp-clean');
 const fs           = require('fs');
 const concat       = require('gulp-concat');
 const autoprefixer = require('gulp-autoprefixer');
-const minCss       = require('gulp-minify-css');
 const rename       = require('gulp-rename');
 const sourceMaps   = require('gulp-sourcemaps');
 const plumber      = require('gulp-plumber');
 const notify       = require('gulp-notify');
+const sassGlob     = require('gulp-sass-glob');
 
 const webpack = require('webpack-stream');
 const babel = require('gulp-babel');
@@ -85,6 +86,7 @@ gulp.task('sass', function() {
     return src(sources.css)
         .pipe(plumber(plumberNotify('Sass')))
         .pipe(sourceMaps.init())
+        .pipe(sassGlob())
 //        вывод экспандед версии css файла:
         .pipe(sass({
             outputStyle : 'expanded'
