@@ -18,10 +18,8 @@ const plumber      = require('gulp-plumber');
 const notify       = require('gulp-notify');
 const sassGlob     = require('gulp-sass-glob');
 
-const webpack = require('webpack-stream');
-const babel = require('gulp-babel');
-// открыть при финальной сборке (пакет группировки медиа-запросов, который ломает сурс-мапс):
-// const groupMedia   = require('gulp-group-css-media-queries')
+const webpack      = require('webpack-stream');
+const babel        = require('gulp-babel');
 
 // конфиг файлы
 var sources = {
@@ -93,8 +91,6 @@ gulp.task('sass', function() {
         }).on('error', sass.logError))
         .pipe(autoprefixer())
         .pipe(sourceMaps.write())
-//        следующий пакет ломает sourceMaps, но группирует медиа-запросы:
-//        .pipe(groupMedia())
         .pipe(dest(sources.destCss))
         // вывод минифицированной версии css файла:
         .pipe(minCss())
