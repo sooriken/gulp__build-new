@@ -91,6 +91,7 @@ gulp.task('pug', function() {
 // функция sass (конвертирует все sass файлы)
 gulp.task('sass', function() {
     return src(sources.css)
+        .pipe(changed(sources.destCss))
         .pipe(plumber(plumberNotify('Sass')))
         .pipe(sourceMaps.init())
         .pipe(sassGlob())
@@ -112,6 +113,7 @@ gulp.task('sass', function() {
 // функция js webpack
 gulp.task('js', function() {
     return src(sources.js)
+        .pipe(changed(sources.destJs))
         .pipe(plumber(plumberNotify('Js')))
 //        .pipe(babel)
         .pipe(webpack(require(sources.webpackConfig)))
@@ -139,7 +141,6 @@ gulp.task('images', function() {
     .pipe(changed(sources.destMinImage))
     .pipe(webp())
     .pipe(dest(sources.destMinImage))
-    
     .pipe(src(sources.images))
     .pipe(changed(sources.destMinImage))
     .pipe(imagemin({ 
