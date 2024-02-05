@@ -4,7 +4,9 @@ const { src, dest, watch, parallel, series } = require('gulp');
 //объявление переменных пакетов
 const gulp         = require('gulp');
 const pug          = require('gulp-pug');
+const htmlclean    = require('gulp-htmlclean');
 const sass         = require('gulp-sass')(require('sass'));
+const sassGlob     = require('gulp-sass-glob');
 const minCss       = require('gulp-minify-css');
 const imagemin     = require('gulp-imagemin');
 const server       = require('gulp-server-livereload');
@@ -16,7 +18,6 @@ const rename       = require('gulp-rename');
 const sourceMaps   = require('gulp-sourcemaps');
 const plumber      = require('gulp-plumber');
 const notify       = require('gulp-notify');
-const sassGlob     = require('gulp-sass-glob');
 
 const webpack      = require('webpack-stream');
 const babel        = require('gulp-babel');
@@ -76,6 +77,7 @@ gulp.task('pug', function() {
     return src([sources.pug, sources.blocksPug ])
         .pipe(plumber(plumberNotify('Pug')))
         .pipe(pug({pretty: true}))
+        .pipe(htmlclean())
         .pipe(dest('./app/'))
 });
 
