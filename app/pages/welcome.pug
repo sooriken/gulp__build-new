@@ -7,7 +7,7 @@ html(lang="ru")
     head
     meta(charset="utf-8")    
     meta(name="viewport" content="width=device-width, initial-scale=1")
-    title Валидация
+    title Контакты
     // default css
     link(rel="stylesheet" href="../css-min/default.min.css")
     // normalize css
@@ -21,9 +21,10 @@ html(lang="ru")
   
 body  
     .page
-        +nav
-        +header       
-        .validation__inner 
-            h1 Валидация
+        +nav 
+        +header
+        .welcome__inner
+            h1 Welcome page!
+            img(src='../images-min/test.jpeg' alt="Photo Background")
         +footer
-script(src="../js-bundle/validation.bundle.js")
+script(src="../js-bundle/welcome.bundle.js")

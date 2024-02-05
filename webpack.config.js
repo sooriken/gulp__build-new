@@ -3,6 +3,7 @@ const config = {
 	entry: {
 		main      : './app/src/js/main.js',
 		validation: './app/src/js/validation.js',
+		welcome   : './app/src/js/welcome.js',
 		contacts  : './app/src/js/contacts.js'
 	},
 	output: {

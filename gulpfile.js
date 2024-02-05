@@ -8,6 +8,7 @@ const htmlclean    = require('gulp-htmlclean');
 const sass         = require('gulp-sass')(require('sass'));
 const sassGlob     = require('gulp-sass-glob');
 const minCss       = require('gulp-minify-css');
+const webpCss      = require('gulp-webp-css');
 const imagemin     = require('gulp-imagemin');
 const server       = require('gulp-server-livereload');
 const clean        = require('gulp-clean');
@@ -18,6 +19,8 @@ const rename       = require('gulp-rename');
 const sourceMaps   = require('gulp-sourcemaps');
 const plumber      = require('gulp-plumber');
 const notify       = require('gulp-notify');
+const webp         = require('gulp-webp');
+const webpHTML     = require('gulp-webp-html');
 
 const webpack      = require('webpack-stream');
 const babel        = require('gulp-babel');
@@ -38,8 +41,10 @@ var sources = {
     // html
     html         : './app/**/*.html',
     // image
-    image        : './app/src/images/**/*',
-    destImage    : 'dist/images',
+    images       : './app/src/images/**/*',
+    destImage    : 'dist/images-min',
+    destMinImage : './app/images-min',
+    minImage     : './app/images-min/**/*',
     // fonts
     fonts        : './app/fonts/**/*',
     destFonts    : './dist/fonts',
@@ -77,6 +82,7 @@ gulp.task('pug', function() {
     return src([sources.pug, sources.blocksPug ])
         .pipe(plumber(plumberNotify('Pug')))
         .pipe(pug({pretty: true}))
+		.pipe(webpHTML())
         .pipe(htmlclean())
         .pipe(dest('./app/'))
 });
@@ -93,6 +99,7 @@ gulp.task('sass', function() {
         }).on('error', sass.logError))
         .pipe(autoprefixer())
         .pipe(sourceMaps.write())
+        .pipe(webpCss())
         .pipe(dest(sources.destCss))
         // вывод минифицированной версии css файла:
         .pipe(minCss())
@@ -116,13 +123,6 @@ gulp.task('server', function() {
 		.pipe(server(serverOptions));
 });
 
-// функция watch (слежение за sass и pug файлами)
-gulp.task('watch', function() {
-	gulp.watch(sources.anySass, gulp.parallel('sass'));
-	gulp.watch(sources.pug, gulp.parallel('pug'));
-	gulp.watch(sources.anyJs, gulp.parallel('js'));
-});
-
 // функция clean (очищает папку "dist")
 gulp.task('clean', function(done) {
     if (fs.existsSync('./dist/')) {
@@ -132,19 +132,22 @@ gulp.task('clean', function(done) {
     done();
 });
 
-// функция default (clean, pug, sass, server, watch)
-gulp.task('default', gulp.series(
-    gulp.parallel('pug', 'sass', 'js'),
-    gulp.parallel('server', 'watch')
-));
-
 //функция сжатия изображений
 gulp.task('images', function() {
-    return src(sources.image)
-    .pipe(imagemin({
+    return src(sources.images)
+    .pipe(webp())
+    .pipe(dest(sources.destMinImage))
+    .pipe(src(sources.images))
+    .pipe(imagemin({ 
         verbose: true
     }))
-    .pipe(dest(sources.destImage))
+    .pipe(dest(sources.destMinImage))
+});
+
+//функция билда изображений
+gulp.task('imagesMin', function() {
+    return src(sources.minImage)
+        .pipe(dest(sources.destImage));
 });
 
 // функция копирования шрифтов в готовую папку dist
@@ -177,6 +180,19 @@ gulp.task('jsBundle', function() {
         .pipe(dest('./dist/js-bundle'));
 });
 
+// функция watch (слежение за sass и pug файлами)
+gulp.task('watch', function() {
+	gulp.watch(sources.anySass, gulp.parallel('sass'));
+	gulp.watch(sources.pug, gulp.parallel('pug'));
+	gulp.watch(sources.anyJs, gulp.parallel('js'));
+	gulp.watch(sources.images, gulp.parallel('images'));
+});
+
+// функция default (clean, pug, sass, server, watch)
+gulp.task('default', gulp.series(
+    gulp.parallel('pug', 'sass', 'js', 'images'),
+    gulp.parallel('server', 'watch')
+));
 
 // функция build
 gulp.task('build', gulp.series(
@@ -186,5 +202,5 @@ gulp.task('build', gulp.series(
     'jsBundle',
     'files',
     'fonts',
-    'images'
+    'imagesMin'
 ));
