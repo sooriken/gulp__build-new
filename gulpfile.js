@@ -4,23 +4,24 @@ const { src, dest, watch, parallel, series } = require('gulp');
 //объявление переменных пакетов
 const gulp         = require('gulp');
 const pug          = require('gulp-pug');
+const webpHTML     = require('gulp-webp-html')
 const htmlclean    = require('gulp-htmlclean');
 const sass         = require('gulp-sass')(require('sass'));
 const sassGlob     = require('gulp-sass-glob');
 const minCss       = require('gulp-minify-css');
+const autoprefixer = require('gulp-autoprefixer');
 const webpCss      = require('gulp-webp-css');
 const imagemin     = require('gulp-imagemin');
+const webp         = require('gulp-webp');
+const changed      = require('gulp-changed');;
 const server       = require('gulp-server-livereload');
 const clean        = require('gulp-clean');
 const fs           = require('fs');
 const concat       = require('gulp-concat');
-const autoprefixer = require('gulp-autoprefixer');
 const rename       = require('gulp-rename');
 const sourceMaps   = require('gulp-sourcemaps');
 const plumber      = require('gulp-plumber');
 const notify       = require('gulp-notify');
-const webp         = require('gulp-webp');
-const webpHTML     = require('gulp-webp-html');
 
 const webpack      = require('webpack-stream');
 const babel        = require('gulp-babel');
@@ -135,9 +136,12 @@ gulp.task('clean', function(done) {
 //функция сжатия изображений
 gulp.task('images', function() {
     return src(sources.images)
+    .pipe(changed(sources.destMinImage))
     .pipe(webp())
     .pipe(dest(sources.destMinImage))
+    
     .pipe(src(sources.images))
+    .pipe(changed(sources.destMinImage))
     .pipe(imagemin({ 
         verbose: true
     }))
