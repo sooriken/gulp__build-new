@@ -3,9 +3,9 @@
     box-sizing: border-box
 
 html
-    font-family: 'Raleway', sans-serif
+    font-family: "Inter", sans-serif
     font-size: 14px
-
+    background: #F2F7FB
 a
     display: block
     text-decoration: none
@@ -20,14 +20,10 @@ a:hover
     display: flex
     flex-direction: column
     overflow-x: hidden
-    min-height: 100vh
-    height: 1px
     //
     font-weight: 400
     line-height: 1.2
-    color: #303030
-    background: #272733
-
+    color: #000000
 
 .content
     flex-grow: 1
@@ -37,24 +33,26 @@ img
 
 .button 
     display: flex
+    position: relative
     text-align: center
     transition: .3s linear
     flex-direction: column
     justify-content: center
     cursor: pointer
     //
-    max-width: 380px
+    max-width: 200px
     padding: 15px 32px
-    border: 1px solid #FFFFFF
-    border-radius: 4px
-    text-transform: uppercase
-    color: rgba(255, 255, 255, 0.78)
-    background: #3E9CDC
+    border: 1px solid #01687B
+    border-radius: 32px
+    background: #01687B
+    color: #F2F7FB
+    font-size: 16px
+    line-height: 1
 
 .button:hover 
-    color: #3E9CDC
-    border-color: #3E9CDC
-    background: #fff
+    color: #01687B
+    border-color: #01687B
+    background: #F2F7FB
 
 .form 
     display: block
@@ -163,3 +161,7 @@ input[type=range]::-ms-thumb
     border-radius: 3px
     border-radius: 50%
     background: #42A9ED
+
+.hidden
+    display: none
+    opacity: 0

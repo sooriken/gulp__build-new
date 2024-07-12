@@ -1,8 +1,9 @@
-import module from './modules/module.js';
+document.getElementById("sidenavOpen").addEventListener('click',function (){
+    document.getElementById("sidenav").classList.remove("side-nav--hidden");
+    document.getElementById("sidenavPlaceholder").classList.remove("side-nav__placeholder--hidden");
+}); 
 
-import AirDatepicker from 'air-datepicker';
-import 'air-datepicker/air-datepicker.css';
-
-new AirDatepicker('#date');
-
-console.log(module);
+document.getElementById("sidenavClose").addEventListener('click',function (){
+    document.getElementById("sidenav").classList.add("side-nav--hidden");
+    document.getElementById("sidenavPlaceholder").classList.add("side-nav__placeholder--hidden");
+}); 
